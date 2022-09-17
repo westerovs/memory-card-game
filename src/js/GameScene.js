@@ -8,7 +8,7 @@ export default class GameScene extends Phaser.State {
   }
   
   preload() {
-    this.load.image('bg', './src/img/background.png')
+    this.load.image('bg', './src/img/background.jpg')
     this.load.image('card', './src/img/cards/card.png')
   }
   
@@ -33,8 +33,8 @@ export default class GameScene extends Phaser.State {
   getCardPositions() {
     const positions = []
     
-    const cardWidth         = 196
-    const cardHeight        = 306
+    const cardWidth         = 200
+    const cardHeight        = 300
     const offsetCardBetween = 10
     
     const offsetCenterGame  = {

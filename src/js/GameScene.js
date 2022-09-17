@@ -1,7 +1,10 @@
+import Card from './Card.js';
+
 export default class GameScene extends Phaser.State {
   constructor() {
     super('Game')
 
+    this.cards = []
   }
   
   preload() {
@@ -10,20 +13,21 @@ export default class GameScene extends Phaser.State {
   }
   
   create() {
-    this.#createBg()
+    this.#createBackground()
     this.#createCards()
   }
   
-  #createBg() {
+  #createBackground() {
     this.add.sprite(0, 0, 'bg')
   }
   
   #createCards() {
     const positions = this.getCardPositions()
-  
+    
     positions.forEach(position => {
-      this.add.sprite(position.x, position.y, 'card')
+      this.cards.push(new Card(this.game, position.x, position.y, 'card'))
     })
+    
   }
   
   getCardPositions() {

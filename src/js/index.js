@@ -7,6 +7,7 @@ const config = {
   state: new GameScene(),
   
   // Игровые данные. Лучше потом вынести в отдельный конфиг
+  CARDS: [1, 2, 3, 4, 5],
   rows: 2,
   cols: 5
 }

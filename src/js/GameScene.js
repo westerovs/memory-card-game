@@ -1,5 +1,6 @@
 import Card from './Card.js';
 
+
 export default class GameScene extends Phaser.State {
   constructor() {
     super('Game')
@@ -9,7 +10,11 @@ export default class GameScene extends Phaser.State {
   
   preload() {
     this.load.image('bg', './src/img/background.jpg')
-    this.load.image('card', './src/img/cards/card.png')
+    this.load.image('card', './src/img/cards/card-shirt.png')
+    
+    for (let i = 1; i <= 5; i++) {
+      this.load.image(`card${i}`, `./src/img/cards/card${i}.png`)
+    }
   }
   
   create() {
@@ -22,12 +27,23 @@ export default class GameScene extends Phaser.State {
   }
   
   #createCards() {
-    const positions = this.getCardPositions()
+    const positions = Phaser.ArrayUtils.shuffle(this.getCardPositions())
+    const cardsLength = this.game.config.CARDS.length
+    let startIdCard = 1
     
+    // проход по массиву всех позиций
     positions.forEach(position => {
-      this.cards.push(new Card(this.game, position.x, position.y, 'card'))
+      // если дошли до максимального количества уникальных карт, делаем второй ряд
+      if (startIdCard === cardsLength) {
+        startIdCard = 1
+        this.cards.push(new Card(this.game, position.x, position.y, 'card' + startIdCard))
+        return
+      }
+      
+      this.cards.push(new Card(this.game, position.x, position.y, 'card' + startIdCard))
+      startIdCard++
     })
-    
+
   }
   
   getCardPositions() {

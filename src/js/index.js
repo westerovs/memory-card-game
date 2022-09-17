@@ -4,14 +4,42 @@ this.game.config.width - размер игры
 const state = new Phaser.State('Game')
 
 state.preload = function () {
-  console.log('preload')
   this.load.image('bg', './src/img/background.png')
+  this.load.image('card', './src/img/cards/card.png')
 }
 
 state.create = function () {
+  // create bg
   this.add.sprite(0, 0, 'bg')
-  console.log(this.game)
-  console.log('create')
+  // create cards
+  const positions = this.getCardPositions()
+  
+  positions.forEach(position => {
+    this.add.sprite(position.x, position.y, 'card')
+  })
+}
+
+state.getCardPositions = function () {
+  const positions = []
+  
+  const cardWidth  = 196
+  const cardHeight = 306
+  const offsetCardBetween = 10
+  const offsetCenterGame = {
+    x: (config.width - cardWidth * config.cols) / 2,
+    y: (config.height - cardHeight * config.rows) / 2,
+  }
+  
+  for (let row = 0; row < config.rows; row++) {
+    for (let col = 0; col < config.cols; col++) {
+      positions.push({
+        x: offsetCenterGame.x + (offsetCardBetween + cardWidth) * col,
+        y: offsetCenterGame.y + (offsetCardBetween + cardHeight) * row
+      })
+    }
+  }
+
+  return positions
 }
 
 const config = {
@@ -20,35 +48,9 @@ const config = {
   height: 720,
   state,
   
-  // state: {
-  //   init: function() {
-  //     this.game.debug.font = '14px monospace';
-  //     this.game.debug.lineHeight = 18;
-  //   },
-  //
-  //   preload: function() {
-  //     this.load.baseURL = 'https://cdn.jsdelivr.net/gh/samme/phaser-examples-assets@v1.0.0/';
-  //     this.load.crossOrigin = 'anonymous';
-  //     this.load.image('dude', 'sprites/phaser-dude.png');
-  //     this.load.image('starfield', 'skies/starfield.png');
-  //   },
-  //
-  //   create: function() {
-  //     this.add.tileSprite(0, 0, 800, 800, 'starfield');
-  //     this.add.sprite(400, 300, 'dude');
-  //   },
-  //
-  //   render: function() {
-  //     var debug = this.game.debug;
-  //
-  //     // debug.object(this.game.config, 10, 20, {
-  //     //   label: 'game.config',
-  //     //   color: 'auto',
-  //     // });
-  //
-  //     debug.phaser(20, 780);
-  //   }
-  // }
+  // Игровые данные. Лучше потом вынести в отдельный конфиг
+  rows: 2,
+  cols: 5
 }
 
 window.game = new Phaser.Game(config);

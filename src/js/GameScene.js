@@ -5,7 +5,8 @@ export default class GameScene extends Phaser.State {
   constructor() {
     super('Game')
 
-    this.cards = []
+    this.cardsContainer = null
+    this.oppenedCard = false // current open card
   }
   
   preload() {
@@ -27,22 +28,48 @@ export default class GameScene extends Phaser.State {
   }
   
   #createCards() {
+    this.cardsContainer = this.game.add.group()
     const positions = Phaser.ArrayUtils.shuffle(this.getCardPositions().slice())
   
     this.game.config.CARDS.forEach(cardId => {
       for (let i = 0; i < 2; i++) {
         const lastPosition = positions.pop()
-        this.cards.push(new Card(this.game, lastPosition.x, lastPosition.y, 'card', cardId))
+        this.cardsContainer.add(new Card(this.game, lastPosition.x, lastPosition.y, 'card', cardId))
       }
     })
-
+    
+    this.cardsContainer.onChildInputDown.add(this.#onCardClicked)
+  }
+  
+  #onCardClicked = (card) => {
+    if (card.oppened) return false
+    
+    // уже есть открытая карта
+    if (this.oppenedCard) {
+      // если равны - то запоминаем
+      if (this.oppenedCard.id === card.id) {
+        this.oppenedCard = null
+      }
+      // если разные - скрыть прошлую
+      else {
+        this.oppenedCard.close()
+        this.oppenedCard = card
+      }
+    }
+    // ещё нет открытой карты
+    else {
+      // если ещё нет - то записываем карту в текущую
+      this.oppenedCard = card
+    }
+    
+    card.open()
   }
   
   getCardPositions() {
     const positions = []
-    
-    const cardWidth         = 200
-    const cardHeight        = 300
+  
+    const cardWidth  = 200
+    const cardHeight = 300
     const offsetCardBetween = 10
     
     const offsetCenterGame  = {

@@ -14,8 +14,9 @@ export default class Card extends Phaser.Sprite {
     this.inputEnabled = true
   }
   
-  flip(texture) {
+  flip() {
     scaleTween(this.scene, this, {x: 0}).onComplete.add(() => {
+      const texture = this.opened ? 'card' + this.id : 'card'
       this.loadTexture(texture)
       scaleTween(this.scene, this, {x: 1})
     })
@@ -23,14 +24,13 @@ export default class Card extends Phaser.Sprite {
   
   open() {
     this.opened = true
-    // this.loadTexture('card' + this.id)
-    this.flip('card' + this.id)
+    this.flip()
   }
   
   close() {
-    this.opened = false
-    // this.loadTexture('card')
-    this.flip('card')
+    if (this.opened) {
+      this.opened = false
+      this.flip()
+    }
   }
-  
 }

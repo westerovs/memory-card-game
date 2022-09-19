@@ -1,6 +1,5 @@
 import Card from './Card.js';
 
-
 export default class GameScene extends Phaser.State {
   constructor() {
     super('Game')
@@ -34,7 +33,6 @@ export default class GameScene extends Phaser.State {
   #initCards = () => {
     // перетасовать и закрыть все карты
     const positions = this.getCardPositions().slice()
-    
   
     this.cardsContainer.children.forEach(card => {
       card.close()

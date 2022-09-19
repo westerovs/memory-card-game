@@ -52,7 +52,7 @@ export default class GameScene extends Phaser.State {
     this.cardsContainer = this.game.add.group()
 
     this.game.config.CARDS.forEach(cardId => {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < this.game.config.maxTwins; i++) {
         this.cardsContainer.add(new Card(this.game, 'card', cardId))
       }
     })
@@ -61,7 +61,7 @@ export default class GameScene extends Phaser.State {
   }
   
   #onCardClicked = (card) => {
-    if (card.oppened) return false
+    if (card.opened) return false
     
     // уже есть открытая карта
     if (this.oppenedCard) {

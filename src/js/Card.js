@@ -1,6 +1,6 @@
 export default class Card extends Phaser.Sprite {
-  constructor(scene, x, y, key, id) {
-    super(scene, x, y, key)
+  constructor(scene, key, id) {
+    super(scene, 0, 0, key)
 
     this.scene = game
     this.scene.add.existing(this)

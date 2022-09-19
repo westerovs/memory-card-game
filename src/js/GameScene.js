@@ -6,7 +6,8 @@ export default class GameScene extends Phaser.State {
     super('Game')
 
     this.cardsContainer = null
-    this.oppenedCard = false // current open card
+    this.oppenedCard = null // current open card
+    this.oppenedCardCount = 0
   }
   
   preload() {
@@ -21,6 +22,26 @@ export default class GameScene extends Phaser.State {
   create() {
     this.#createBackground()
     this.#createCards()
+    this.#start()
+  }
+  
+  #start = () => {
+    this.oppenedCard = null
+    this.oppenedCardCount = 0
+    this.#initCards()
+  }
+  
+  #initCards = () => {
+    // перетасовать и закрыть все карты
+    const positions = this.getCardPositions().slice()
+    
+  
+    this.cardsContainer.children.forEach(card => {
+      card.close()
+      const lastPosition = positions.pop()
+      card.position.set(lastPosition.x, lastPosition.y)
+    })
+  
   }
   
   #createBackground() {
@@ -29,12 +50,10 @@ export default class GameScene extends Phaser.State {
   
   #createCards() {
     this.cardsContainer = this.game.add.group()
-    const positions = Phaser.ArrayUtils.shuffle(this.getCardPositions().slice())
-  
+
     this.game.config.CARDS.forEach(cardId => {
       for (let i = 0; i < 2; i++) {
-        const lastPosition = positions.pop()
-        this.cardsContainer.add(new Card(this.game, lastPosition.x, lastPosition.y, 'card', cardId))
+        this.cardsContainer.add(new Card(this.game, 'card', cardId))
       }
     })
     
@@ -49,6 +68,7 @@ export default class GameScene extends Phaser.State {
       // если равны - то запоминаем
       if (this.oppenedCard.id === card.id) {
         this.oppenedCard = null
+        this.oppenedCardCount++
       }
       // если разные - скрыть прошлую
       else {
@@ -63,6 +83,12 @@ export default class GameScene extends Phaser.State {
     }
     
     card.open()
+    
+    // проверка на то, что все карты открыты
+    const numberOfPairs = this.cardsContainer.children.length / 2
+    if (this.oppenedCardCount === numberOfPairs) {
+      this.#start()
+    }
   }
   
   getCardPositions() {
@@ -86,6 +112,7 @@ export default class GameScene extends Phaser.State {
       }
     }
     
-    return positions
+    // возвращает перемешанные позиции
+    return Phaser.ArrayUtils.shuffle(positions)
   }
 }

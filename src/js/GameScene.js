@@ -27,21 +27,13 @@ export default class GameScene extends Phaser.State {
   }
   
   #createCards() {
-    const positions = Phaser.ArrayUtils.shuffle(this.getCardPositions())
-    const cardsLength = this.game.config.CARDS.length
-    let startIdCard = 1
-    
-    // проход по массиву всех позиций
-    positions.forEach(position => {
-      // если дошли до максимального количества уникальных карт, делаем второй ряд
-      if (startIdCard === cardsLength) {
-        startIdCard = 1
-        this.cards.push(new Card(this.game, position.x, position.y, 'card' + startIdCard))
-        return
+    const positions = Phaser.ArrayUtils.shuffle(this.getCardPositions().slice())
+  
+    this.game.config.CARDS.forEach(cardId => {
+      for (let i = 0; i < 2; i++) {
+        const lastPosition = positions.pop()
+        this.cards.push(new Card(this.game, lastPosition.x, lastPosition.y, 'card', cardId))
       }
-      
-      this.cards.push(new Card(this.game, position.x, position.y, 'card' + startIdCard))
-      startIdCard++
     })
 
   }

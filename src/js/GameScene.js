@@ -11,18 +11,29 @@ export default class GameScene extends Phaser.State {
     this.timer = null
     this.timeout = null
     this.timeoutText = ''
+    
+    this.isAudioOn = false
   }
   
   preload() {
     this.load.image('bg', './src/assets/images/background.jpg')
     this.load.image('card', './src/assets/images/cards/card-shirt.png')
+    this.load.image('sound-on', './src/assets/images/icons/sound-on.png')
+    this.load.image('sound-off', './src/assets/images/icons/sound-off.png')
     
     for (let i = 1; i <= 5; i++) {
       this.load.image(`card${i}`, `./src/assets/images/cards/card${i}.png`)
     }
+    
+    this.load.audio('card', './src/assets/sounds/card.mp3')
+    this.load.audio('complete', './src/assets/sounds/complete.mp3')
+    this.load.audio('success', './src/assets/sounds/success.mp3')
+    this.load.audio('theme', './src/assets/sounds/theme.mp3')
+    this.load.audio('timeout', './src/assets/sounds/timeout.mp3')
   }
   
   create() {
+    this.sound.mute = true
     this.timeout = this.game.config.timeout
   
     this.#createTimer()
@@ -30,6 +41,7 @@ export default class GameScene extends Phaser.State {
     this.#createCards()
     this.#start()
     this.#createText()
+    this.initAudio()
   }
   
   #createText() {
@@ -44,6 +56,7 @@ export default class GameScene extends Phaser.State {
     this.timeoutText.setText(`TIME: ${ this.timeout }`)
     
     if (this.timeout <= 0) {
+      this.sounds.timeout.play()
       this.#start()
     } else {
       this.timeout--
@@ -98,6 +111,8 @@ export default class GameScene extends Phaser.State {
   
   #onCardClicked = (card) => {
     if (card.opened) return false
+  
+    this.sounds.card.play()
     
     // уже есть открытая карта
     if (this.oppenedCard) {
@@ -105,6 +120,7 @@ export default class GameScene extends Phaser.State {
       if (this.oppenedCard.id === card.id) {
         this.oppenedCard = null
         this.oppenedCardCount++
+        this.sounds.success.play()
       }
       // если разные - скрыть прошлую
       else {
@@ -124,6 +140,7 @@ export default class GameScene extends Phaser.State {
     const numberOfPairs = this.cardsContainer.children.length / 2
     if (this.oppenedCardCount === numberOfPairs) {
       this.#start()
+      this.sounds.complete.play()
     }
   }
   
@@ -150,5 +167,40 @@ export default class GameScene extends Phaser.State {
     
     // возвращает перемешанные позиции
     return Phaser.ArrayUtils.shuffle(positions)
+  }
+  
+  //  ********* audio
+  initAudio = () => {
+    this.sounds = {
+      card: this.sound.add('card'),
+      complete: this.sound.add('complete'),
+      success: this.sound.add('success'),
+      theme: this.sound.add('theme'),
+      timeout: this.sound.add('timeout'),
+    }
+  
+    const iconAudio = this.add.image(50, 50, 'sound-off')
+    iconAudio.inputEnabled = true
+    iconAudio.events.onInputDown.add(() => this.onAudioHandler(iconAudio))
+  }
+  
+  onAudioHandler = (iconAudio) => {
+    this.isAudioOn = !this.isAudioOn
+    
+    if (this.isAudioOn) iconAudio.loadTexture('sound-on')
+    else iconAudio.loadTexture('sound-off')
+  
+    this.createSounds()
+  }
+  
+  createSounds = () => {
+    if (this.isAudioOn && !this.sounds.theme.isPlaying) {
+      this.sounds.theme.play()
+      this.sounds.theme.volume = 0.05
+      this.sound.mute = false
+    } else {
+      this.sounds.theme.stop()
+      this.sound.mute = true
+    }
   }
 }

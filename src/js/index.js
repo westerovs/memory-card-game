@@ -10,7 +10,8 @@ const config = {
   CARDS: [1, 2, 3, 4, 5],
   maxTwins: 2, // кол-во одинаковых карт
   rows: 2,
-  cols: 5
+  cols: 5,
+  timeout: 3,
 }
 
 window.game = new Phaser.Game(config);

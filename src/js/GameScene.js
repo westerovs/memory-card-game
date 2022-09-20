@@ -7,24 +7,62 @@ export default class GameScene extends Phaser.State {
     this.cardsContainer = null
     this.oppenedCard = null // current open card
     this.oppenedCardCount = 0
+  
+    this.timer = null
+    this.timeout = null
+    this.timeoutText = ''
   }
   
   preload() {
-    this.load.image('bg', './src/img/background.jpg')
-    this.load.image('card', './src/img/cards/card-shirt.png')
+    this.load.image('bg', './src/assets/images/background.jpg')
+    this.load.image('card', './src/assets/images/cards/card-shirt.png')
     
     for (let i = 1; i <= 5; i++) {
-      this.load.image(`card${i}`, `./src/img/cards/card${i}.png`)
+      this.load.image(`card${i}`, `./src/assets/images/cards/card${i}.png`)
     }
   }
   
   create() {
+    this.timeout = this.game.config.timeout
+  
+    this.#createTimer()
     this.#createBackground()
     this.#createCards()
     this.#start()
+    this.#createText()
   }
   
+  #createText() {
+    this.timeoutText = this.add.text(10, 130, '', {
+      font: '36px CurseCasual',
+      fill: '#ffffff'
+    });
+  }
+  
+  // ----------- timer
+  #onTimerTick() {
+    this.timeoutText.setText(`TIME: ${ this.timeout }`)
+    
+    if (this.timeout <= 0) {
+      this.#start()
+    } else {
+      this.timeout--
+    }
+  }
+  
+  #createTimer = () => {
+    this.timer = this.game.time.create(false)
+    
+    this.timer.loop(1000, () => {
+      this.#onTimerTick()
+    })
+    
+    this.timer.start()
+  }
+  // ----------- end timer
+  
   #start = () => {
+    this.timeout = this.game.config.timeout
     this.oppenedCard = null
     this.oppenedCardCount = 0
     this.#initCards()

@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "CurseCasual";
+  src: local("CurseCasual"), url("../assets/fonts/CurseCasualEng.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
 *,
 ::before,
 ::after {
@@ -5,6 +12,7 @@
   padding: 0;
   margin: 0;
 }
+
 
 .page {
   min-height: 100%;
@@ -14,7 +22,7 @@
 .page-body {
   min-height: 100%;
   font-size: 18px;
-  font-family: Geometria, Arial, Helvetica, sans-serif;
+  /*font-family: Geometria, Arial, Helvetica, sans-serif;*/
   background-color: #2c7580;
   color: #ccc;
   overflow: hidden;
@@ -34,6 +42,20 @@ img {
   height: auto;
 }
 
-canvas {
-
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  overflow: hidden !important;
 }
+
+.text-preload {
+  font-family: CurseCasual, sans-serif !important;
+  font-size: 50px;
+  color: red;
+}
+

@@ -1,4 +1,6 @@
-import Card from './Card.js';
+import AudioManager from './components/AudioManager.js'
+import Timer from './components/Timer.js'
+import Card from './Card.js'
 
 export default class GameScene extends Phaser.State {
   constructor() {
@@ -8,11 +10,9 @@ export default class GameScene extends Phaser.State {
     this.oppenedCard = null // current open card
     this.oppenedCardCount = 0
   
-    this.timer = null
-    this.timeout = null
-    this.timeoutText = ''
-    
-    this.isAudioOn = false
+    // components
+    this.audioManager = new AudioManager(this)
+    this.timer = new Timer(this, this.audioManager, this.start)
   }
   
   preload() {
@@ -33,49 +33,15 @@ export default class GameScene extends Phaser.State {
   }
   
   create() {
-    this.sound.mute = true
-    this.timeout = this.game.config.timeout
-  
-    this.#createTimer()
     this.#createBackground()
+  
     this.#createCards()
-    this.#start()
-    this.#createText()
-    this.initAudio()
+    this.start()
+    this.audioManager.initAudio()
+    this.timer.init()
   }
   
-  #createText() {
-    this.timeoutText = this.add.text(10, 130, '', {
-      font: '36px CurseCasual',
-      fill: '#ffffff'
-    });
-  }
-  
-  // ----------- timer
-  #onTimerTick() {
-    this.timeoutText.setText(`TIME: ${ this.timeout }`)
-    
-    if (this.timeout <= 0) {
-      this.sounds.timeout.play()
-      this.#start()
-    } else {
-      this.timeout--
-    }
-  }
-  
-  #createTimer = () => {
-    this.timer = this.game.time.create(false)
-    
-    this.timer.loop(1000, () => {
-      this.#onTimerTick()
-    })
-    
-    this.timer.start()
-  }
-  // ----------- end timer
-  
-  #start = () => {
-    this.timeout = this.game.config.timeout
+  start = () => {
     this.oppenedCard = null
     this.oppenedCardCount = 0
     this.#initCards()
@@ -112,7 +78,7 @@ export default class GameScene extends Phaser.State {
   #onCardClicked = (card) => {
     if (card.opened) return false
   
-    this.sounds.card.play()
+    this.audioManager.sounds.card.play()
     
     // уже есть открытая карта
     if (this.oppenedCard) {
@@ -120,7 +86,7 @@ export default class GameScene extends Phaser.State {
       if (this.oppenedCard.id === card.id) {
         this.oppenedCard = null
         this.oppenedCardCount++
-        this.sounds.success.play()
+        this.audioManager.sounds.success.play()
       }
       // если разные - скрыть прошлую
       else {
@@ -139,8 +105,8 @@ export default class GameScene extends Phaser.State {
     // проверка на то, что все карты открыты
     const numberOfPairs = this.cardsContainer.children.length / 2
     if (this.oppenedCardCount === numberOfPairs) {
-      this.#start()
-      this.sounds.complete.play()
+      this.start()
+      this.audioManager.sounds.complete.play()
     }
   }
   
@@ -167,40 +133,5 @@ export default class GameScene extends Phaser.State {
     
     // возвращает перемешанные позиции
     return Phaser.ArrayUtils.shuffle(positions)
-  }
-  
-  //  ********* audio
-  initAudio = () => {
-    this.sounds = {
-      card: this.sound.add('card'),
-      complete: this.sound.add('complete'),
-      success: this.sound.add('success'),
-      theme: this.sound.add('theme'),
-      timeout: this.sound.add('timeout'),
-    }
-  
-    const iconAudio = this.add.image(50, 50, 'sound-off')
-    iconAudio.inputEnabled = true
-    iconAudio.events.onInputDown.add(() => this.onAudioHandler(iconAudio))
-  }
-  
-  onAudioHandler = (iconAudio) => {
-    this.isAudioOn = !this.isAudioOn
-    
-    if (this.isAudioOn) iconAudio.loadTexture('sound-on')
-    else iconAudio.loadTexture('sound-off')
-  
-    this.createSounds()
-  }
-  
-  createSounds = () => {
-    if (this.isAudioOn && !this.sounds.theme.isPlaying) {
-      this.sounds.theme.play()
-      this.sounds.theme.volume = 0.05
-      this.sound.mute = false
-    } else {
-      this.sounds.theme.stop()
-      this.sound.mute = true
-    }
   }
 }

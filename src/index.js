@@ -32,8 +32,7 @@ const config = {
     cardWidth: 200,
     cardHeight: 300,
     cardOffset: 30,
-    maxTwins: 2, // кол-во одинаковых карт
-    rows: 2,
+    rows: 3,
     cols: 5,
   },
   

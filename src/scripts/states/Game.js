@@ -17,14 +17,12 @@ export default class Game extends Phaser.State {
 
   create() {
     this.#createBackground()
-
     this.#createCards()
     this.#setCenterContainer()
     
     this.start()
     this.audioManager.initAudio()
     this.timer.init()
-  
   }
   
   start = () => {
@@ -33,9 +31,13 @@ export default class Game extends Phaser.State {
     this.#initCards()
   }
   
+  #createBackground() {
+    this.add.sprite(0, 0, 'bg')
+  }
+  
   #initCards = () => {
     // перетасовать и закрыть все карты
-    const positions = this.getCardPositions().slice()
+    const positions = this.#getCardPositions().slice()
     
     this.cardsContainer.children.forEach(card => {
       card.close()
@@ -44,19 +46,15 @@ export default class Game extends Phaser.State {
     })
   }
   
-  #createBackground() {
-    this.add.sprite(0, 0, 'bg')
-  }
-  
   #createCards() {
     this.cardsContainer = this.game.add.group()
-    
+  
     this.game.config.CARDS.data.forEach(cardId => {
-      for (let i = 0; i < this.game.config.CARDS.maxTwins; i++) {
-        this.cardsContainer.add(new Card(this.game, 'card', cardId))
+      for (let i = 0; i < this.game.config.CARDS.rows; i++) {
+        this.cardsContainer.add(new Card(this.game, 'card' + cardId, cardId))
       }
     })
-    
+  
     this.cardsContainer.onChildInputDown.add(this.#onCardClicked)
   }
   
@@ -95,15 +93,17 @@ export default class Game extends Phaser.State {
     }
   }
   
-  getCardPositions() {
+  #getCardPositions() {
     const positions = []
     
     const cardWidth  = this.game.config.CARDS.cardWidth
     const cardHeight = this.game.config.CARDS.cardHeight
     const offsetCardBetween = this.game.config.CARDS.cardOffset
+    const rows = this.game.config.CARDS.rows
+    const cols =this.game.config.CARDS.cols
     
-    for (let row = 0; row < this.game.config.CARDS.rows; row++) {
-      for (let col = 0; col < this.game.config.CARDS.cols; col++) {
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
         positions.push({
           x: (offsetCardBetween + cardWidth) * col,
           y: (offsetCardBetween + cardHeight) * row

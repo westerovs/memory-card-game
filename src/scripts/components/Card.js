@@ -1,10 +1,10 @@
-import {scaleTween} from './utils/tweens.js'
+import {scaleTween} from '../utils/tweens.js'
 
 export default class Card extends Phaser.Sprite {
   constructor(scene, key, id) {
     super(scene, 0, 0, key)
 
-    this.scene = game
+    this.scene = scene
     this.scene.add.existing(this)
     this.key = key
     this.id = id

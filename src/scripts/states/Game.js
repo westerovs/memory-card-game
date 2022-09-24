@@ -1,40 +1,23 @@
-import AudioManager from './components/AudioManager.js'
-import Timer from './components/Timer.js'
-import Card from './Card.js'
+import AudioManager from '../components/AudioManager.js';
+import Timer from '../components/Timer.js'
+import Card from '../components/Card.js'
 
-export default class GameScene extends Phaser.State {
+export default class Game extends Phaser.State {
   constructor() {
-    super('Game')
-
+    super()
+    
     this.cardsContainer = null
     this.oppenedCard = null // current open card
     this.oppenedCardCount = 0
-  
+    
     // components
     this.audioManager = new AudioManager(this)
     this.timer = new Timer(this, this.audioManager, this.start)
   }
-  
-  preload() {
-    this.load.image('bg', './src/assets/images/background.jpg')
-    this.load.image('card', './src/assets/images/cards/card-shirt.png')
-    this.load.image('sound-on', './src/assets/images/icons/sound-on.png')
-    this.load.image('sound-off', './src/assets/images/icons/sound-off.png')
-    
-    for (let i = 1; i <= 5; i++) {
-      this.load.image(`card${i}`, `./src/assets/images/cards/card${i}.png`)
-    }
-    
-    this.load.audio('card', './src/assets/sounds/card.mp3')
-    this.load.audio('complete', './src/assets/sounds/complete.mp3')
-    this.load.audio('success', './src/assets/sounds/success.mp3')
-    this.load.audio('theme', './src/assets/sounds/theme.mp3')
-    this.load.audio('timeout', './src/assets/sounds/timeout.mp3')
-  }
-  
+
   create() {
     this.#createBackground()
-  
+
     this.#createCards()
     this.start()
     this.audioManager.initAudio()
@@ -50,13 +33,12 @@ export default class GameScene extends Phaser.State {
   #initCards = () => {
     // перетасовать и закрыть все карты
     const positions = this.getCardPositions().slice()
-  
+    
     this.cardsContainer.children.forEach(card => {
       card.close()
       const lastPosition = positions.pop()
       card.position.set(lastPosition.x, lastPosition.y)
     })
-  
   }
   
   #createBackground() {
@@ -65,7 +47,7 @@ export default class GameScene extends Phaser.State {
   
   #createCards() {
     this.cardsContainer = this.game.add.group()
-
+    
     this.game.config.CARDS.forEach(cardId => {
       for (let i = 0; i < this.game.config.maxTwins; i++) {
         this.cardsContainer.add(new Card(this.game, 'card', cardId))
@@ -77,7 +59,7 @@ export default class GameScene extends Phaser.State {
   
   #onCardClicked = (card) => {
     if (card.opened) return false
-  
+    
     this.audioManager.sounds.card.play()
     
     // уже есть открытая карта
@@ -112,7 +94,7 @@ export default class GameScene extends Phaser.State {
   
   getCardPositions() {
     const positions = []
-  
+    
     const cardWidth  = 200
     const cardHeight = 300
     const offsetCardBetween = 10

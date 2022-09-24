@@ -27,10 +27,20 @@ const config = {
   },
   
   // Other
-  CARDS: [1, 2, 3, 4, 5],
-  maxTwins: 2, // кол-во одинаковых карт
-  rows: 2,
-  cols: 5,
+  CARDS: {
+    data: [1, 2, 3, 4, 5],
+    cardWidth: 200,
+    cardHeight: 300,
+    cardOffset: 30,
+    maxTwins: 2, // кол-во одинаковых карт
+    rows: 2,
+    cols: 5,
+  },
+  
+  // cardWidth: 200,
+  // cardHeight: 300,
+  // cardOffset: 30,
+
   timeout: 30,
 }
 

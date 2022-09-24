@@ -12,6 +12,7 @@ export default class Card extends Phaser.Sprite {
     this.anchor.set(0.5)
     this.opened = false
     this.inputEnabled = true
+  
   }
   
   flip() {

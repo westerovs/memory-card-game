@@ -19,9 +19,12 @@ export default class Game extends Phaser.State {
     this.#createBackground()
 
     this.#createCards()
+    this.#setCenterContainer()
+    
     this.start()
     this.audioManager.initAudio()
     this.timer.init()
+  
   }
   
   start = () => {
@@ -48,8 +51,8 @@ export default class Game extends Phaser.State {
   #createCards() {
     this.cardsContainer = this.game.add.group()
     
-    this.game.config.CARDS.forEach(cardId => {
-      for (let i = 0; i < this.game.config.maxTwins; i++) {
+    this.game.config.CARDS.data.forEach(cardId => {
+      for (let i = 0; i < this.game.config.CARDS.maxTwins; i++) {
         this.cardsContainer.add(new Card(this.game, 'card', cardId))
       }
     })
@@ -95,25 +98,29 @@ export default class Game extends Phaser.State {
   getCardPositions() {
     const positions = []
     
-    const cardWidth  = 200
-    const cardHeight = 300
-    const offsetCardBetween = 10
+    const cardWidth  = this.game.config.CARDS.cardWidth
+    const cardHeight = this.game.config.CARDS.cardHeight
+    const offsetCardBetween = this.game.config.CARDS.cardOffset
     
-    const offsetCenterGame  = {
-      x: (this.game.config.width - cardWidth * this.game.config.cols) / 2,
-      y: (this.game.config.height - cardHeight * this.game.config.rows) / 2,
-    }
-    
-    for (let row = 0; row < this.game.config.rows; row++) {
-      for (let col = 0; col < this.game.config.cols; col++) {
+    for (let row = 0; row < this.game.config.CARDS.rows; row++) {
+      for (let col = 0; col < this.game.config.CARDS.cols; col++) {
         positions.push({
-          x: offsetCenterGame.x + (offsetCardBetween + cardWidth) * col,
-          y: offsetCenterGame.y + (offsetCardBetween + cardHeight) * row
+          x: (offsetCardBetween + cardWidth) * col,
+          y: (offsetCardBetween + cardHeight) * row
         })
       }
     }
     
     // возвращает перемешанные позиции
     return Phaser.ArrayUtils.shuffle(positions)
+  }
+  
+  #setCenterContainer() {
+    const offsetCardBetween = this.game.config.CARDS.cardOffset
+
+    this.cardsContainer.position.set(
+      (100 + this.cardsContainer.width + (offsetCardBetween * 4)) / 2,
+      (150 + this.cardsContainer.height + (offsetCardBetween * 2)) ,
+    )
   }
 }

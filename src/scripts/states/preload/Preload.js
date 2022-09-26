@@ -11,7 +11,7 @@ export default class Preload extends Phaser.State {
     this.load.image('sound-on', './src/assets/images/icons/sound-on.png')
     this.load.image('sound-off', './src/assets/images/icons/sound-off.png')
   
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
       this.load.image(`card${i}`, `./src/assets/images/cards/card${i}.png`)
     }
   

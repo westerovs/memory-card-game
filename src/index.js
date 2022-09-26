@@ -28,18 +28,15 @@ const config = {
   
   // Other
   CARDS: {
-    data: [1, 2, 3, 4, 5],
+    data: [1, 2, 3, 4, 5, 6], // номер прибавляется к имени карты 'card' + id + '.png'
+    maxCards: 12,
     cardWidth: 200,
     cardHeight: 300,
-    cardOffset: 30,
+    cardOffset: 10,
     rows: 3,
-    cols: 5,
+    cols: 4,
   },
   
-  // cardWidth: 200,
-  // cardHeight: 300,
-  // cardOffset: 30,
-
   timeout: 30,
 }
 

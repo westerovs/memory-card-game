@@ -1,18 +1,17 @@
 import {scaleTween} from '../utils/tweens.js'
 
 export default class Card extends Phaser.Sprite {
-  constructor(scene, key, id) {
-    super(scene, 0, 0, key)
+  constructor(scene, key, id, x, y) {
+    super(scene, x, y, key)
 
     this.scene = scene
     this.scene.add.existing(this)
     this.key = key
     this.id = id
-    
+
     this.anchor.set(0.5)
     this.opened = false
     this.inputEnabled = true
-  
   }
   
   flip() {
@@ -33,5 +32,9 @@ export default class Card extends Phaser.Sprite {
       this.opened = false
       this.flip()
     }
+  }
+  
+  debug() {
+    this.loadTexture('card' + this.id)
   }
 }

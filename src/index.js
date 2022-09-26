@@ -29,6 +29,7 @@ const config = {
   // Other
   CARDS: {
     data: [1, 2, 3, 4, 5, 6], // номер прибавляется к имени карты 'card' + id + '.png'
+    key: 'card',
     maxCards: 12,
     cardWidth: 200,
     cardHeight: 300,
@@ -37,7 +38,7 @@ const config = {
     cols: 4,
   },
   
-  timeout: 30,
+  timeout: 90,
 }
 
 const game = new Phaser.Game(config)

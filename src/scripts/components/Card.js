@@ -10,31 +10,36 @@ export default class Card extends Phaser.Sprite {
     this.id = id
 
     this.anchor.set(0.5)
-    this.opened = false
+    this.cardOpened = false
     this.inputEnabled = true
   }
   
+  // переворачивает карту
   flip() {
+    if (this.cardOpened) this.turnCard('card' + this.id)
+    else this.turnCard('card')
+  }
+  
+  turnCard(texture) {
     scaleTween(this.scene, this, {x: 0}).onComplete.add(() => {
-      const texture = this.opened ? 'card' + this.id : 'card'
       this.loadTexture(texture)
       scaleTween(this.scene, this, {x: 1})
     })
   }
   
   open() {
-    this.opened = true
+    this.cardOpened = true
     this.flip()
   }
   
   close() {
-    if (this.opened) {
-      this.opened = false
+    if (this.cardOpened) {
+      this.cardOpened = false
       this.flip()
     }
   }
   
   debug() {
-    this.loadTexture('card' + this.id)
+    this.turnCard('card' + this.id)
   }
 }

@@ -13,7 +13,7 @@ export default class Game extends Phaser.State {
     this.cardsContainer = null
     this.oppenedCard = null // current open card
     this.oppenedCardCount = 0
-    this.isShowCardDebug = true
+    this.isShowCardDebug = false
     
     // components
     this.audioManager = new AudioManager(this)
@@ -54,7 +54,9 @@ export default class Game extends Phaser.State {
 
     let countId = 1
     for (let i = 1; i <= this.game.config.CARDS.maxCards; i++) {
-      this.cardsContainer.add(new Card(this.game, 'card', countId, positions[i-1].x, positions[i-1].y))
+      this.cardsContainer.add(new Card(
+        this.game, this.game.config.CARDS.key, countId, positions[i-1].x, positions[i-1].y
+      ))
 
       countId++
       if (countId >= 7) {

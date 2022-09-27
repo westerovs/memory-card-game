@@ -38,7 +38,7 @@ const config = {
     cols: 4,
   },
   
-  timeout: 90,
+  timeout: 3,
 }
 
 const game = new Phaser.Game(config)

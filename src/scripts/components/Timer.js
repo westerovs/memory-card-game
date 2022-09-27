@@ -24,6 +24,8 @@ export default class Timer {
     this.timeoutText.setText(`TIME: ${ this.timeout }`)
     
     if (this.timeout <= 0) {
+      this.timer.pause()
+
       this.timeout = this.state.game.config.timeout
       this.audioManager.sounds.timeout.play()
       this.callBack()
@@ -38,6 +40,5 @@ export default class Timer {
       fill: '#ffffff'
     });
   }
-  
 
 }

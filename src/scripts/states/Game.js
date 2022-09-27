@@ -19,7 +19,7 @@ export default class Game extends Phaser.State {
     
     // components
     this.audioManager = new AudioManager(this)
-    this.timer = new Timer(this, this.audioManager, this.startGame)
+    this.timer = new Timer(this, this.audioManager, this.restartGame)
   }
 
   create() {
@@ -43,8 +43,14 @@ export default class Game extends Phaser.State {
   startGame = () => {
     this.oppenedCard = null
     this.oppenedCardCount = 0
+    this.timer.timer.resume()
     this.#initCards()
     this.#showCards()
+  }
+  
+  restartGame = () => {
+    // this.startGame() // когда все карты улетели
+    this.#hideCards()
   }
   
   #initCards = () => {
@@ -55,7 +61,27 @@ export default class Game extends Phaser.State {
   
   #showCards() {
     this.cardsContainer.children.forEach(card => {
-      card.showAnimation(this, {x: 1, y: 1,})
+      card.runAnimation(this, {x: 1, y: 1, alpha: 1})
+    })
+  }
+  
+  #hideCards() {
+    let count = 0
+    const cardComplete = () => {
+      count++
+      
+      if (count >= this.game.config.CARDS.maxCards) {
+        console.log(' STARRTT ')
+        this.startGame() // когда все карты улетели
+      }
+    }
+    
+    this.cardsContainer.children.forEach(card => {
+      card.runAnimation(this, {
+        x: 0, y: 0,
+        alpha: 0,
+        callBack: cardComplete
+      })
     })
   }
   
@@ -118,7 +144,8 @@ export default class Game extends Phaser.State {
     // проверка на то, что все карты открыты
     const numberOfPairs = this.cardsContainer.children.length / 2
     if (this.oppenedCardCount === numberOfPairs) {
-      this.startGame()
+      // this.startGame()
+      this.restartGame()
       this.audioManager.sounds.complete.play()
     }
   }

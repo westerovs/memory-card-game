@@ -21,11 +21,14 @@ export default class Card extends Phaser.Sprite {
     this.close()
   }
   
-  showAnimation(game, params) {
+  runAnimation(game, params) {
     game.add.tween(this.scale)
       .to({x: params.x, y: params.y,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
     game.add.tween(this)
-      .to({alpha: 1,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
+      .to({alpha: params.alpha,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
+      .onComplete.add(() => {
+        if (params.callBack) params.callBack()
+    })
   }
   
   // переворачивает карту

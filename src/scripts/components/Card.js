@@ -22,7 +22,7 @@ export default class Card extends Phaser.Sprite {
     this.close()
   }
   
-  runAnimation(game, params) {
+  runAnimation = (game, params) => {
     game.add.tween(this.scale)
       .to({x: params.x, y: params.y,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
     game.add.tween(this)

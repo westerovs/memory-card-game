@@ -1,6 +1,8 @@
 import AudioManager from '../components/AudioManager.js';
 import Timer from '../components/Timer.js'
 import Card from '../components/Card.js'
+import MiniMap from '../components/MiniMap.js';
+import { getPositionsCards } from '../utils/utils.js';
 
 /*
 Для отладки включить this.isShowCardDebug = true
@@ -27,9 +29,11 @@ export default class Game extends Phaser.State {
     
     this.audioManager.initAudio()
     this.timer.init()
-    this.startGame()
     
     this.#setDebugStatus()
+    this.#initMinimap()
+    
+    this.startGame()
   }
   
   #createBackground() {
@@ -50,18 +54,21 @@ export default class Game extends Phaser.State {
   
   #createCards() {
     this.cardsContainer = this.game.add.group()
-    const positions = this.#setPositionsCards().slice()
+    const positions = getPositionsCards(this.game.config.CARDS.rows, this.game.config.CARDS.cols,
+      {
+        width: this.game.config.CARDS.cardWidth,
+        height: this.game.config.CARDS.cardHeight,
+        offset: this.game.config.CARDS.cardOffset,
+      })
 
     let countId = 1
     for (let i = 1; i <= this.game.config.CARDS.maxCards; i++) {
       this.cardsContainer.add(new Card(
-        this.game, this.game.config.CARDS.key, countId, positions[i-1].x, positions[i-1].y
+        this.game, this.game.config.CARDS.key, countId, positions[i - 1].x, positions[i - 1].y
       ))
-
+    
       countId++
-      if (countId >= 7) {
-        countId = 1
-      }
+      if (countId >= 7) countId = 1
     }
 
     this.cardsContainer.onChildInputDown.add(this.#onCardClicked)
@@ -102,30 +109,29 @@ export default class Game extends Phaser.State {
     }
   }
   
-  #setPositionsCards() {
-    const positions = []
-    
-    const cardWidth  = this.game.config.CARDS.cardWidth
-    const cardHeight = this.game.config.CARDS.cardHeight
-    const offsetCardBetween = this.game.config.CARDS.cardOffset
-    const rows = this.game.config.CARDS.rows
-    const cols = this.game.config.CARDS.cols
-
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        positions.push({
-          x: (offsetCardBetween + cardWidth) * col,
-          y: (offsetCardBetween + cardHeight) * row
-        })
-      }
-    }
-    
-    // возвращает перемешанные позиции
-    return Phaser.ArrayUtils.shuffle(positions)
+  #setPositionContainer() {
+    this.cardsContainer.position.set(200, 350)
   }
   
-  #setPositionContainer() {
-    this.cardsContainer.position.set(150, 150)
+  #initMinimap() {
+    const miniMap = new MiniMap(this, this.game.config);
+
+    for (let i = 1; i <= 6; i++) {
+      const heart = this.game.add.sprite(0, 0, 'card' + i)
+      miniMap.addItem(heart)
+    }
+  
+    // Add some items to the miniMap.
+    if (this.scale.isLandscape) {
+      console.log('isLandscape')
+      miniMap.lineHorizontal()
+      miniMap.setPosition(1000, 500)
+    } else {
+      console.log('isPortrait')
+      miniMap.lineVertical()
+      miniMap.setPosition(100, 100)
+    }
+
   }
   
   #setDebugStatus = () => {

@@ -42,7 +42,7 @@ img {
 }
 
 canvas {
-  border: 4px dashed blue;
+  /*border: 4px dashed blue;*/
   margin: 0 auto; /* хмм... */
 }
 

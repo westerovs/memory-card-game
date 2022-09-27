@@ -50,6 +50,8 @@ config.getStates().forEach(state => {
   game.state.add(state.key, state.constructor)
 })
 
+window._game = game
+
 
 
 

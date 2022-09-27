@@ -1,4 +1,5 @@
-import { getPositionsCards } from '../utils/utils.js';
+import { getPositionsCards } from '../utils/utils.js'
+import { tweenSetAlpha } from '../utils/tweens.js'
 
 export default class MiniMap extends Phaser.Group {
   constructor(game, config) {
@@ -47,7 +48,7 @@ export default class MiniMap extends Phaser.Group {
   
   showCard(id) {
     const card = this.cardsPreview.find(card => card._id === id)
-    card.alpha = 1
+    tweenSetAlpha(this.game, card, 1)
   }
   
   setPosition(x, y) {

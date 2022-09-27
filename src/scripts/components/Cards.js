@@ -14,7 +14,7 @@ export default class Cards extends Phaser.Group {
   
     this.oppenedCard = null // current open card
     this.oppenedCardCount = 0
-    this.isShowCardDebug = true
+    this.isShowCardDebug = false
   }
   
   init = () => {
@@ -23,8 +23,6 @@ export default class Cards extends Phaser.Group {
   }
   
   createCards = () => {
-    // this = this.game.add.group()
-    
     // todo оптимизировать вызов
     const positions = getPositionsCards(this.config.CARDS.rows, this.config.CARDS.cols,
       {
@@ -51,8 +49,7 @@ export default class Cards extends Phaser.Group {
     }
     
     this.onChildInputDown.add(this.#onCardClicked)
-    // this.#setDebugStatus()
-  
+    this.#setDebugStatus()
   }
   
   initCards = () => {
@@ -63,29 +60,29 @@ export default class Cards extends Phaser.Group {
     this.#showCards()
   }
   
-  #showCards = () => {
-    this.children.forEach(card => {
-      card.runAnimation(this.game, {x: 1, y: 1, alpha: 1})
-    })
-  }
-
   hideCards = () => {
     let count = 0
     const cardComplete = () => {
       count++
-
+      
       if (count >= this.config.CARDS.maxCards) {
         // this.#startGame() // когда все карты улетели
         this.game.startGame()
       }
     }
-
+    
     this.children.forEach(card => {
       card.runAnimation(this.game, {
         x: 0, y: 0,
         alpha: 0,
         callBack: cardComplete
       })
+    })
+  }
+  
+  #showCards = () => {
+    this.children.forEach(card => {
+      card.runAnimation(this.game, {x: 1, y: 1, alpha: 1})
     })
   }
   
@@ -134,10 +131,6 @@ export default class Cards extends Phaser.Group {
   }
   
   #setDebugStatus = () => {
-    if (this.isShowCardDebug) {
-      this.forEach(card => {
-        card.debug()
-      })
-    }
+    if (this.isShowCardDebug) this.forEach(card => card.debug())
   }
 }

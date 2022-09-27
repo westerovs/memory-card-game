@@ -101,6 +101,7 @@ export default class Cards extends Phaser.Group {
         this.oppenedCard = null
         this.oppenedCardCount++
         this.game.audioManager.sounds.success.play()
+        this.game.isCardCouple.dispatch(card.id)
       }
       // если разные - скрыть прошлую
       else {

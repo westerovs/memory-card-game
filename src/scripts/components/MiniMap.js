@@ -5,10 +5,14 @@ export default class MiniMap extends Phaser.Group {
     super(game)
     this.game = game
     this.config = config
+    
+    this.cardsPreview = []
   }
   
-  addItem(item) {
+  addItem(item, id) {
+    item._id = id
     this.add(item)
+    this.cardsPreview.push(item)
     item.alpha = 0.5
   }
   
@@ -41,12 +45,17 @@ export default class MiniMap extends Phaser.Group {
     }
   }
   
-  setPosition(x, y) {
-    this.position.set(x, y)
-    this.createRect(this.game, this, 0, 0, this.width, this.height)
+  showCard(id) {
+    const card = this.cardsPreview.find(card => card._id === id)
+    card.alpha = 1
   }
   
-  createRect = (game, container, x, y, w, h) => {
+  setPosition(x, y) {
+    this.position.set(x, y)
+    this.#createRect(this.game, this, 0, 0, this.width, this.height)
+  }
+  
+  #createRect = (game, container, x, y, w, h) => {
     const rect = game.make.graphics(0, 0)
     rect.beginFill(0x211E18)
     rect.anchor.set(0.5)
@@ -55,7 +64,7 @@ export default class MiniMap extends Phaser.Group {
     
     container.add(rect)
     this.sendToBack(rect)
-  
+    
     return rect
   }
 }

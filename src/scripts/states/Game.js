@@ -44,11 +44,18 @@ export default class Game extends Phaser.State {
     this.oppenedCard = null
     this.oppenedCardCount = 0
     this.#initCards()
+    this.#showCards()
   }
   
   #initCards = () => {
     this.cardsContainer.children.forEach(card => {
-      card.close()
+      card.init()
+    })
+  }
+  
+  #showCards() {
+    this.cardsContainer.children.forEach(card => {
+      card.showAnimation(this, {x: 1, y: 1,})
     })
   }
   
@@ -62,12 +69,19 @@ export default class Game extends Phaser.State {
       })
 
     let countId = 1
+    let delayIndex = 0
     for (let i = 1; i <= this.game.config.CARDS.maxCards; i++) {
-      this.cardsContainer.add(new Card(
-        this.game, this.game.config.CARDS.key, countId, positions[i - 1].x, positions[i - 1].y
-      ))
+      this.cardsContainer.add(new Card({
+        scene: this.game,
+        key  : this.game.config.CARDS.key,
+        id   : countId,
+        delayIndex: delayIndex,
+        x: positions[i - 1].x,
+        y: positions[i - 1].y
+      }))
     
       countId++
+      delayIndex++
       if (countId >= 7) countId = 1
     }
 

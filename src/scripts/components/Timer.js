@@ -1,9 +1,10 @@
 // timer должен быть выше бэкграунда !
 export default class Timer {
-  constructor(state, audioManager, callBack) {
+  constructor(state, audioManager, callBack, gameOver) {
     this.state = state
     this.audioManager = audioManager
     this.callBack = callBack
+    this.gameOver = gameOver
     
     this.timer = null
     this.timeout = null
@@ -28,6 +29,8 @@ export default class Timer {
 
       this.timeout = this.state.game.config.timeout
       this.audioManager.sounds.timeout.play()
+      this.gameOver()
+  
       this.callBack()
     } else {
       this.timeout--

@@ -19,7 +19,7 @@ export default class Game extends Phaser.State {
     
     // components
     this.audioManager = new AudioManager(this)
-    this.timer = new Timer(this, this.audioManager, this.restartGame)
+    this.timer = new Timer(this, this.audioManager, this.restartGame, this.gameOver)
   }
 
   create() {
@@ -33,14 +33,14 @@ export default class Game extends Phaser.State {
     this.#setDebugStatus()
     this.#initMinimap()
     
-    this.startGame()
+    this.#startGame()
   }
   
-  #createBackground() {
-    this.add.sprite(0, 0, 'bg')
+  restartGame = () => {
+    this.#hideCards()
   }
   
-  startGame = () => {
+  #startGame = () => {
     this.oppenedCard = null
     this.oppenedCardCount = 0
     this.timer.timer.resume()
@@ -48,9 +48,8 @@ export default class Game extends Phaser.State {
     this.#showCards()
   }
   
-  restartGame = () => {
-    // this.startGame() // когда все карты улетели
-    this.#hideCards()
+  #createBackground() {
+    this.add.sprite(0, 0, 'bg')
   }
   
   #initCards = () => {
@@ -71,8 +70,7 @@ export default class Game extends Phaser.State {
       count++
       
       if (count >= this.game.config.CARDS.maxCards) {
-        console.log(' STARRTT ')
-        this.startGame() // когда все карты улетели
+        this.#startGame() // когда все карты улетели
       }
     }
     
@@ -138,16 +136,23 @@ export default class Game extends Phaser.State {
       // если ещё нет - то записываем карту в текущую
       this.oppenedCard = card
     }
+  
+    card.open(() => this.#gameWin())
+  }
+  
+  #gameWin = () => {
+    // запускает финальное действие, только после завершения анимации последней карты
+    const numberOfPairs = this.cardsContainer.children.length / 2 // 6
     
-    card.open()
-    
-    // проверка на то, что все карты открыты
-    const numberOfPairs = this.cardsContainer.children.length / 2
     if (this.oppenedCardCount === numberOfPairs) {
-      // this.startGame()
       this.restartGame()
       this.audioManager.sounds.complete.play()
+      console.log('GAME WIN')
     }
+  }
+  
+  gameOver = () => {
+    console.log('GAME OVER')
   }
   
   #setPositionContainer() {

@@ -15,6 +15,7 @@ export default class Card extends Phaser.Sprite {
     this.alpha = 0
     this.cardOpened = false
     this.inputEnabled = true
+    this.callback = null
   }
   
   init() {
@@ -41,11 +42,15 @@ export default class Card extends Phaser.Sprite {
     scaleTween(this.scene, this, {x: 0}).onComplete.add(() => {
       this.loadTexture(texture)
       scaleTween(this.scene, this, {x: 1})
+        .onComplete.add(() => {
+        if (this.callback) this.callback()
+      })
     })
   }
   
-  open() {
+  open(callback) {
     this.cardOpened = true
+    this.callback = callback
     this.flip()
   }
   

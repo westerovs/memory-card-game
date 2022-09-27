@@ -75,7 +75,7 @@ export default class Game extends Phaser.State {
   }
   
   #onCardClicked = (card) => {
-    if (card.opened) return false
+    if (card.cardOpened) return false
     
     this.audioManager.sounds.card.play()
     
@@ -115,10 +115,10 @@ export default class Game extends Phaser.State {
   
   #initMinimap() {
     const miniMap = new MiniMap(this, this.game.config);
-
+    
     for (let i = 1; i <= 6; i++) {
-      const heart = this.game.add.sprite(0, 0, 'card' + i)
-      miniMap.addItem(heart)
+      const card = this.game.add.sprite(0, 0, 'card' + i)
+      miniMap.addItem(card)
     }
   
     // Add some items to the miniMap.

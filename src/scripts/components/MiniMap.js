@@ -43,5 +43,19 @@ export default class MiniMap extends Phaser.Group {
   
   setPosition(x, y) {
     this.position.set(x, y)
+    this.createRect(this.game, this, 0, 0, this.width, this.height)
+  }
+  
+  createRect = (game, container, x, y, w, h) => {
+    const rect = game.make.graphics(0, 0)
+    rect.beginFill(0x211E18)
+    rect.anchor.set(0.5)
+    rect.drawRect(x, y, w, h)
+    rect.endFill()
+    
+    container.add(rect)
+    this.sendToBack(rect)
+  
+    return rect
   }
 }

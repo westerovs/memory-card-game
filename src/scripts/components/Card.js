@@ -7,13 +7,13 @@ export default class Card extends Phaser.Sprite {
     this.scene = scene
     this.scene.add.existing(this)
     this.key = key
-    this.id = id
+    this._id = id
     this.delayIndex = delayIndex
 
     this.anchor.set(0.5)
     this.scale.set(0)
     this.alpha = 0
-    this.cardOpened = false
+    this.cardIsOpened = false
     this.inputEnabled = true
     this.callback = null
   }
@@ -22,11 +22,17 @@ export default class Card extends Phaser.Sprite {
     this.close()
   }
   
+  open(callback) {
+    this.cardIsOpened = true
+    this.callback = callback
+    this.flip()
+  }
+  
   runAnimation = (game, params) => {
     game.add.tween(this.scale)
-      .to({x: params.x, y: params.y,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
+      .to({x: params.x, y: params.y,}, 1, Phaser.Easing.Linear.None, true, )
     game.add.tween(this)
-      .to({alpha: params.alpha,}, 250, Phaser.Easing.Linear.None, true, 50 * this.delayIndex)
+      .to({alpha: params.alpha,}, 1, Phaser.Easing.Linear.None, true, )
       .onComplete.add(() => {
         if (params.callBack) params.callBack()
     })
@@ -34,7 +40,7 @@ export default class Card extends Phaser.Sprite {
   
   // переворачивает карту
   flip() {
-    if (this.cardOpened) this.turnCard('card' + this.id)
+    if (this.cardIsOpened) this.turnCard('card' + this._id)
     else this.turnCard('card')
   }
   
@@ -48,20 +54,14 @@ export default class Card extends Phaser.Sprite {
     })
   }
   
-  open(callback) {
-    this.cardOpened = true
-    this.callback = callback
-    this.flip()
-  }
-  
   close() {
-    if (this.cardOpened) {
-      this.cardOpened = false
+    if (this.cardIsOpened) {
+      this.cardIsOpened = false
       this.flip()
     }
   }
   
   debug() {
-    this.turnCard('card' + this.id)
+    this.turnCard('card' + this._id)
   }
 }

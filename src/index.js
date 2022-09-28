@@ -27,6 +27,11 @@ const config = {
   },
   
   // Other
+  VERSION: {
+    classic    : true,
+    alternative: false
+  },
+  
   CARDS: {
     data: [1, 2, 3, 4, 5, 6], // номер прибавляется к имени карты 'card' + id + '.png'
     key: 'card',
@@ -38,7 +43,7 @@ const config = {
     cols: 4,
   },
   
-  timeout: 66,
+  timeout: 999,
 }
 
 const game = new Phaser.Game(config)

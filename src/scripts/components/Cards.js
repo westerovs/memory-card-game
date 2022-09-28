@@ -12,8 +12,8 @@ export default class Cards extends Phaser.Group {
     this.config = config
     this.state = state
   
-    this.oppenedCard = null // current open card
-    this.oppenedCardCount = 0
+    this.currentOpenCard = null // current open card
+    this.currentOpenCardCount = 0
     this.isShowCardDebug = false
   }
   
@@ -53,8 +53,8 @@ export default class Cards extends Phaser.Group {
   }
   
   initCards = () => {
-    this.oppenedCard = null
-    this.oppenedCardCount = 0
+    this.currentOpenCard = null
+    this.currentOpenCardCount = 0
     
     this.children.forEach(card => card.init())
     this.#showCards()
@@ -87,32 +87,48 @@ export default class Cards extends Phaser.Group {
   }
   
   #onCardClicked = (card) => {
-    if (card.cardOpened) return false
-
+    if (card.cardIsOpened) return
+  
     this.game.audioManager.sounds.card.play()
-
-    // если открыта одна из карт
-    if (this.oppenedCard) this.#openedCardAction(card)
+    
+    // если клик произошёл и уже открыта одна из карт
+    if (this.currentOpenCard) this.#openedCardAction(card)
     else {
-      // если ещё нет - то записываем карту в текущую
-      this.oppenedCard = card
+      //  если две карты уже открыты, или не было ещё клика
+      // если карты не равны, то делаем текущей следующую
+      this.currentOpenCard = card
+      console.log('если две карты уже открыты, или не было ещё клика')
     }
 
     card.open(() => this.#gameWin())
   }
   
   #openedCardAction = (card) => {
+    const secondCard = card
+    
     // если две карты равны
-    if (this.oppenedCard.id === card.id) {
-      this.oppenedCard = null
-      this.oppenedCardCount++
+    if (this.currentOpenCard._id === card._id) {
+      console.log(' ------------------ ')
+      console.log('КАРТЫ РАВНЫ')
+      console.log(' ------------------ ')
+      this.currentOpenCard = null
+      this.currentOpenCardCount++
       this.game.audioManager.sounds.success.play()
-      this.game.isCardCouple.dispatch(card.id)
+      this.game.isCardCouple.dispatch(card._id)
     }
     // если разные - скрыть прошлую
     else {
-      this.oppenedCard.close()
-      this.oppenedCard = card
+      if (this.config.VERSION.classic) {
+        this.currentOpenCard.close()
+        this.currentOpenCard = card
+      }
+      if (this.config.VERSION.alternative) {
+        this.game.canvas.style.pointerEvents = 'none'
+        this.game.time.events.add(Phaser.Timer.SECOND, () => {
+          secondCard.close()
+          this.game.canvas.style.pointerEvents = 'auto'
+        })
+      }
     }
   }
 
@@ -120,7 +136,7 @@ export default class Cards extends Phaser.Group {
     // запускает финальное действие, только после завершения анимации последней карты
     const numberOfPairs = this.children.length / 2 // 6
 
-    if (this.oppenedCardCount === numberOfPairs) {
+    if (this.currentOpenCardCount === numberOfPairs) {
       this.game.restartGame()
       this.game.audioManager.sounds.complete.play()
       this.game.gameWin()

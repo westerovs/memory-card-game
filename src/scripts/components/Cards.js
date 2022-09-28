@@ -91,28 +91,29 @@ export default class Cards extends Phaser.Group {
 
     this.game.audioManager.sounds.card.play()
 
-    // уже есть открытая карта
-    if (this.oppenedCard) {
-      // если равны - то запоминаем
-      if (this.oppenedCard.id === card.id) {
-        this.oppenedCard = null
-        this.oppenedCardCount++
-        this.game.audioManager.sounds.success.play()
-        this.game.isCardCouple.dispatch(card.id)
-      }
-      // если разные - скрыть прошлую
-      else {
-        this.oppenedCard.close()
-        this.oppenedCard = card
-      }
-    }
-    // ещё нет открытой карты
+    // если открыта одна из карт
+    if (this.oppenedCard) this.#openedCardAction(card)
     else {
       // если ещё нет - то записываем карту в текущую
       this.oppenedCard = card
     }
 
     card.open(() => this.#gameWin())
+  }
+  
+  #openedCardAction = (card) => {
+    // если две карты равны
+    if (this.oppenedCard.id === card.id) {
+      this.oppenedCard = null
+      this.oppenedCardCount++
+      this.game.audioManager.sounds.success.play()
+      this.game.isCardCouple.dispatch(card.id)
+    }
+    // если разные - скрыть прошлую
+    else {
+      this.oppenedCard.close()
+      this.oppenedCard = card
+    }
   }
 
   #gameWin = () => {

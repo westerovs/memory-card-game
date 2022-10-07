@@ -1,9 +1,9 @@
 import Cards from './Cards.js';
-import MiniMap from './MiniMap.js';
+import MiniMap from './modules/MiniMap.js';
 // import AudioManager from './AudioManager.js';
 // import Timer from './Timer.js';
 
-export default class StartGame {
+export default class CardsContainer {
   constructor(game, config) {
     // components
     this.game = game

@@ -1,5 +1,5 @@
-import { getPositionsCards } from '../utils/utils.js'
-import { tweenSetAlpha } from '../utils/tweens.js'
+import { getPositionsCards } from '../../utils/utils.js'
+import { tweenSetAlpha } from '../../utils/tweens.js'
 
 export default class MiniMap extends Phaser.Group {
   constructor(game, config) {

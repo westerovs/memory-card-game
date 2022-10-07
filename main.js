@@ -1,6 +1,7 @@
+// entry point
 import bootstrap from './bootstrap.js'
 import Preload from './src/scripts/states/preload/Preload.js'
-import Game from './src/scripts/states/Game.js'
+import Game from './src/scripts/Game.js'
 import { config } from './src/scripts/configs/config.js'
 
 const getStates = () => {

@@ -1,7 +1,7 @@
 export const config = {
   width: window.innerWidth,
   height: window.innerHeight,
-  renderer: Phaser.AUTO,
+  renderer: Phaser.CANVAS,
   scaleMode  : Phaser.ScaleManager.SHOW_ALL,
   alignH     : true,
   alignV     : true,

@@ -89,7 +89,7 @@ export default class Cards extends Phaser.Group {
   #onCardClicked = (card) => {
     if (card.cardIsOpened) return
   
-    this.game.audioManager.sounds.card.play()
+    // this.game.audioManager.sounds.card.play()
     
     // если клик произошёл и уже открыта одна из карт
     if (this.currentOpenCard) this.#openedCardAction(card)
@@ -113,7 +113,7 @@ export default class Cards extends Phaser.Group {
       console.log(' ------------------ ')
       this.currentOpenCard = null
       this.currentOpenCardCount++
-      this.game.audioManager.sounds.success.play()
+      // this.game.audioManager.sounds.success.play()
       this.game.isCardCouple.dispatch(card._id)
     }
     // если разные - скрыть прошлую
@@ -138,7 +138,7 @@ export default class Cards extends Phaser.Group {
 
     if (this.currentOpenCardCount === numberOfPairs) {
       this.game.restartGame()
-      this.game.audioManager.sounds.complete.play()
+      // this.game.audioManager.sounds.complete.play()
       this.game.gameWin()
     }
   }

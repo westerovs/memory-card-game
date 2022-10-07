@@ -9,6 +9,8 @@ export default class StartGame {
     this.game = game
     this.cards = null
     this.miniMap = null
+    
+    this.bg = null
     // this.audioManager = new AudioManager(this.game)
     // this.timer = new Timer(this.game, this.audioManager, this.restartGame, this.gameOver)
   }
@@ -59,7 +61,7 @@ export default class StartGame {
   }
   
   #createBackground() {
-    this.game.add.sprite(0, 0, 'bg')
+    this.bg = this.game.add.sprite(0, 0, 'bg')
   }
   
   #initMinimap() {
@@ -72,11 +74,9 @@ export default class StartGame {
     
     // Add some items to the miniMap.
     if (this.game.scale.isLandscape) {
-      console.log('isLandscape')
       this.miniMap.lineHorizontal()
       this.miniMap.setPosition(1000, 500)
     } else {
-      console.log('isPortrait')
       this.miniMap.lineHorizontal()
       this.miniMap.setPosition(1000, 500)
       

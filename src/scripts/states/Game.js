@@ -1,5 +1,8 @@
-import StartGame from '../components/StartGame.js';
+import StartGame from '../components/StartGame.js'
+import getFactor from '../utils/factor.js'
+import resize from '../utils/resize.js'
 
+// точка входа, первый стейт
 export default class Game extends Phaser.State {
   constructor() {
     super()
@@ -14,17 +17,20 @@ export default class Game extends Phaser.State {
     this.startGame = new StartGame(game)
     this.startGame.create()
     
-    // this.container = new Container(game)
-    // this.container.createGame()
-    //
-    // this.resize()
+    this.resize()
   }
   
   resize(){
-    // const {container} = this
-    // const {width, height, factor, landscape} = resize(container.bg, getFactor(game), game)
-    // container.updateGame(width, height, factor, landscape)
+    console.log('resize')
+    const {startGame} = this
+    resize(startGame.bg, getFactor(this.game), this.game)
+    
+    // console.log(' ------------------ ')
+    // console.log(getFactor(this.game))
+    // console.log(' ------------------ ')
+    // const {width, height, factor, landscape} = resize(startGame.bg, getFactor(this.game), this.game)
+    // startGame.updateGame(width, height, factor, landscape)
   }
-  //
+
 
 }

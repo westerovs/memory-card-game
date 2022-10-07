@@ -5,37 +5,38 @@ document.body.addEventListener('contextmenu', (event) => {
   return false
 })
 
-export function gameResize(width, height) {
+function gameResize(width, height) {
   if (width === 0 || height === 0) return
-  if (!window._GAME || !window._GAME.isBooted) return
-  if (window._GAME && window._GAME.baseURI) return
+  if (!window.GAME || !window.GAME.isBooted) return
+  if (window.GAME && window.GAME.baseURI) return
   
   // каждый раз при ресайзе пересчитываем всё
   const gameScale = (window.devicePixelRatio > 1) ? 2 : 1
   const windowWidth = width * window.devicePixelRatio
   const windowHeight = height * window.devicePixelRatio
 
-  window._GAME.width = windowWidth
-  window._GAME.height = windowHeight
-  window._GAME.config.width = width * gameScale
-  window._GAME.config.height = height * gameScale
+  window.GAME.width = windowWidth
+  window.GAME.height = windowHeight
+  window.GAME.config.width = width * gameScale
+  window.GAME.config.height = height * gameScale
 
-  window._GAME.scale.setGameSize(windowWidth, windowHeight)
-  window._GAME.scale.refresh()
+  window.GAME.scale.setGameSize(windowWidth, windowHeight)
+  window.GAME.scale.refresh()
 
   // если render Canvas
-  if (window._GAME.renderType === 1) {
-    window._GAME.renderer.resize(windowWidth, windowHeight)
-    Phaser.Canvas.setSmoothingEnabled(window._GAME.context, true)
+  if (window.GAME.renderType === 1) {
+    window.GAME.renderer.resize(windowWidth, windowHeight)
+    Phaser.Canvas.setSmoothingEnabled(window.GAME.context, true)
   }
 
-  window._GAME.camera.setSize(windowWidth, windowHeight)
+  window.GAME.camera.setSize(windowWidth, windowHeight)
 
-  const currentState = window._GAME.state.getCurrentState()
+  const currentState = window.GAME.state.getCurrentState()
   if (currentState && currentState.resize) {
     currentState.resize(windowWidth, windowHeight)
   }
 }
+
 
 function gameStart(config) {
   const GAME = new Phaser.Game(config)
@@ -47,9 +48,9 @@ function gameStart(config) {
     GAME.state.add(state.key, state.constructor)
   })
   
-  window._GAME = GAME
+  window.GAME = GAME
   GAME.constants = config.constants
-  
+
   
   // ----------------- resize listener
   const resizeWatchdog = setInterval(() => {
@@ -58,30 +59,28 @@ function gameStart(config) {
       if (GAME && GAME.isBooted) {
         clearInterval(resizeWatchdog)
       }
-      console.log(`window.innerWidth: ${ window.innerWidth }; window.innerHeight: ${ window.innerHeight }`)
+      console.log(`window.innerWidth: ${window.innerWidth}; window.innerHeight: ${window.innerHeight}`)
       gameResize(window.innerWidth, window.innerHeight)
     }
   }, 50)
   
-  
   let resizeInWait = false
   window.addEventListener('resize', () => {
     if (resizeInWait) return
-  
+    
     resizeInWait = true
     const resizeWatchdog2 = setInterval(() => {
-      // проверка что высота и ширина есть и что они не равны
-      if (window.innerWidth > 0 && window.innerHeight > 0 && (window.innerWidth !== window.innerHeight)) {
+      if (window.innerWidth > 0 && window.innerHeight > 0 && window.innerWidth !== window.innerHeight) {
         resizeInWait = false
         clearInterval(resizeWatchdog2)
         gameResize(window.innerWidth, window.innerHeight)
       }
     }, 10)
   }, false)
+  
 }
 
 export default function bootstrap(config) {
   gameStart(config)
 }
-
 

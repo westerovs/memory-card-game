@@ -1,19 +1,25 @@
 // entry point
 import bootstrap from './bootstrap.js'
-import Preload from './src/scripts/states/preload/Preload.js'
-import Game from './src/scripts/Game.js'
-import { config } from './src/scripts/configs/config.js'
+import StatePreload from './src/scripts/states/Preload.js'
+import StateGame from './src/scripts/states/stateGame/StateGame.js'
+// import StateFinal from './src/scripts/states/stateFinal/StateFinal.js'
+
+import { config } from './configs/config.js'
 
 const getStates = () => {
   return [
     {
       key: config.constants.States.PRELOAD,
-      constructor: new Preload(config),
+      constructor: new StatePreload(config),
     },
     {
       key: config.constants.States.GAME,
-      constructor: new Game(),
+      constructor: new StateGame(config.gameSettings),
     },
+    // {
+    //   key        : config.constants.States.FINAL,
+    //   constructor: new StateFinal(config.finalSettings),
+    // },
   ]
 }
 

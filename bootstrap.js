@@ -1,9 +1,26 @@
-import Boot from './src/scripts/states/preload/Boot.js'
+import Boot from './src/scripts/states/Boot.js'
 
 document.body.addEventListener('contextmenu', (event) => {
   event.preventDefault()
   return false
 })
+
+// улучшает качество картинки, из dpi1 делает dpi2
+const fixDpi = (game) => {
+  const dpi    = window.devicePixelRatio
+  const canvas = game.canvas
+  
+  if (dpi === 1) {
+    canvas.style.width  = `${ canvas.width }px`
+    canvas.style.height = `${ canvas.height }px`
+    
+    canvas.width  = canvas.width * 2
+    canvas.height = canvas.height * 2
+    
+    game.scale.setGameSize(canvas.width, canvas.height)
+    game.scale.refresh()
+  }
+}
 
 function gameResize(width, height) {
   if (width === 0 || height === 0) return
@@ -33,10 +50,11 @@ function gameResize(width, height) {
 
   const currentState = window.GAME.state.getCurrentState()
   if (currentState && currentState.resize) {
-    currentState.resize(windowWidth, windowHeight)
+    fixDpi(window.GAME)
+    if (window.devicePixelRatio === 1) currentState.resize(windowWidth * 2, windowHeight * 2)
+    else currentState.resize(windowWidth, windowHeight)
   }
 }
-
 
 function gameStart(config) {
   const GAME = new Phaser.Game(config)
@@ -59,7 +77,7 @@ function gameStart(config) {
       if (GAME && GAME.isBooted) {
         clearInterval(resizeWatchdog)
       }
-      console.log(`window.innerWidth: ${window.innerWidth}; window.innerHeight: ${window.innerHeight}`)
+      // console.log(`window.innerWidth: ${window.innerWidth}; window.innerHeight: ${window.innerHeight}`)
       gameResize(window.innerWidth, window.innerHeight)
     }
   }, 50)

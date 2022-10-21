@@ -9,7 +9,7 @@ export default class Boot extends Phaser.State {
   }
   
   preload() {
-    this.load.image('bg-start', './src/assets/images/background.jpg')
+    // this.load.image('bg-start', './src/assets/images/bg.jpg')
   }
   
   create() {

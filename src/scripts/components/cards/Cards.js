@@ -148,21 +148,10 @@ export default class Cards extends Phaser.Group {
       this.game.Signals.isCardErrorMatched.dispatch()
       this.changePhrases.checkText()
   
-      if (this._cfg.VERSION.classic) {
-        this.currentOpenCard.close()
-        this.currentOpenCard = card
-  
-        this.game.Signals.checkHintState.dispatch(card)
-      }
-      if (this._cfg.VERSION.alternative) {
-        setPointerEvents(this.game, 'none')
+      this.currentOpenCard.close()
+      this.currentOpenCard = card
 
-        this.game.time.events.add(this.durationShowSecondCard, () => {
-          secondCard.close()
-          setPointerEvents(this.game, 'auto')
-          this.closedCardWhenErrorsMatch()
-        })
-      }
+      this.game.Signals.checkHintState.dispatch(card)
     }
   }
   

@@ -94,7 +94,7 @@ export default class MiniMap extends Phaser.Group {
     // вертикальная
     else {
       this.setLineHorizontal()
-      this.setPosition(465, 1050)
+      this.setPosition(465, 1080)
       this.horizontalBoard.alpha = 1
       this.verticalBoard.alpha = 0
     }

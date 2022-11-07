@@ -17,15 +17,13 @@ export const config = {
       PRELOAD: 'PRELOAD',
       GAME   : 'GAME'
     },
+  
+    FF_BASE: 'Arial'
   },
   
   // Other
   gameSettings: {
     // --- ↓ cards config ↓ ---
-    VERSION: {
-      classic    : true, // по умолчанию
-      alternative: false, // хинт слетает
-    },
     CARDS: {
       data             : [1, 2, 3, 4, 5, 6], // номер прибавляется к имени карты 'card' + id + '.png'
       key              : 'card',

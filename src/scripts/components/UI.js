@@ -36,7 +36,7 @@ export default class UI extends Phaser.Group {
       logo.position.set(centerX - 450 * factor, centerY)
     } else {
       logo.scale.set(1 * gameScale * factor)
-      logo.position.set(centerX, 300 * factor)
+      logo.position.set(centerX, 250 * factor)
     }
   }
 }

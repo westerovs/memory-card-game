@@ -71,7 +71,7 @@ function gameStart(config) {
 
   
   // ----------------- resize listener
-  const resizeWatchdog = setInterval(() => {
+  const resizeWatchdog = setTimeout(() => {
     if (window.innerWidth > 11 && window.innerHeight > 11) {
       // если игра загрузилась
       if (GAME && GAME.isBooted) {
@@ -87,7 +87,7 @@ function gameStart(config) {
     if (resizeInWait) return
     
     resizeInWait = true
-    const resizeWatchdog2 = setInterval(() => {
+    const resizeWatchdog2 = setTimeout(() => {
       if (window.innerWidth > 0 && window.innerHeight > 0 && window.innerWidth !== window.innerHeight) {
         resizeInWait = false
         clearInterval(resizeWatchdog2)
